@@ -22,9 +22,6 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                     R.drawable.ic_launcher_foreground
                 )
             )
-//            onClick = TapAction(
-//                intent = Intent(provideContext(), MainActivity::class.java)
-//            )
         ).create())
     }
 
