@@ -1,28 +1,66 @@
 package nodomain.pacjo.smartspacer.localbattery.targets
 
 import android.content.ComponentName
+import android.content.Context.BATTERY_SERVICE
 import android.graphics.drawable.Icon
+import android.os.BatteryManager
+import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import nodomain.pacjo.smartspacer.localbattery.R
 
+fun convertTime(timeInMilliseconds: Long): String {
+    val hours = timeInMilliseconds / 3600000
+    val minutes = timeInMilliseconds % 3600 / 60
+    return if (hours > 0 && minutes > 0) {
+        String.format("%d hours and %d minutes", hours, minutes)
+    } else if (hours > 0) {
+        String.format("%d hrs", hours)
+    } else if (minutes > 0) {
+        String.format("%d minutes", minutes)
+    } else {
+        "less than a minute"
+    }
+}
+
 class LocalBatteryTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        return listOf(TargetTemplate.Basic(
-            id ="example_$smartspacerId",
-            componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
-            title = Text("Hello World!"),
-            subtitle = Text("Example"),
-            icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
-                Icon.createWithResource(
-                    provideContext(),
-                    R.drawable.ic_launcher_foreground
+
+        val batteryManager = context?.getSystemService(BATTERY_SERVICE) as BatteryManager
+        val timeToCharge: Long = batteryManager.computeChargeTimeRemaining()        // TODO: convert to human-readable string
+        val batteryCurrent: Int = BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE
+        // TODO: val batteryVoltage: Int = BatteryManager.????
+
+        var title = "Charging"
+        var subtitle = "Full in ${convertTime(timeToCharge)}"
+//        if (timeToCharge.toInt() == -1) {
+//            Log.i("MainActivity", "Can't get remaining time, skipping (${timeToCharge})")
+//            title = "$batteryCurrent mA"
+//            subtitle = ""
+//        }
+
+        if (timeToCharge.toInt() > -1) {
+            Log.i("MainActivity", "Got remaining charge time: ${convertTime(timeToCharge)}")
+            return listOf(TargetTemplate.Basic(
+                id ="example_$smartspacerId",
+                componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
+                title = Text(title),
+                subtitle = Text(subtitle),
+                icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
+                    Icon.createWithResource(
+                        provideContext(),
+                        R.drawable.baseline_bolt_24
+                    )
                 )
-            )
-        ).create())
+            ).create())
+        } else {
+            Log.i("MainActivity", "Can't get remaining charge time, returning empty target")
+            return emptyList()
+        }
+
     }
 
     override fun getConfig(smartspacerId: String?): Config {
