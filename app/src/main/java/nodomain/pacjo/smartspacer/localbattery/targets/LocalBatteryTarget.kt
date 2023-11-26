@@ -55,7 +55,9 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                         R.drawable.baseline_bolt_24
                     )
                 )
-            ).create())
+            ).create().apply {
+                canBeDismissed = false
+            })
         } else {
             Log.i("MainActivity", "Can't get remaining charge time, returning empty target")
             return emptyList()
@@ -75,9 +77,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
     }
 
     override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
-        //Handle dismissal of a Target, returning `true` when dismissed, or `false` if not dismissed
-        //TODO
-        return true
+        return false
     }
 
 //    override fun onProviderRemoved(smartspacerId: String) {
