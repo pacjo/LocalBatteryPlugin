@@ -31,7 +31,8 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
 
         val batteryManager = context?.getSystemService(BATTERY_SERVICE) as BatteryManager
-        val timeToCharge: Long = batteryManager.computeChargeTimeRemaining()        // TODO: convert to human-readable string
+        val isCharging: Boolean = batteryManager.isCharging
+        val timeToCharge: Long = batteryManager.computeChargeTimeRemaining()
         val batteryCurrent: Int = BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE
         // TODO: val batteryVoltage: Int = BatteryManager.????
 
