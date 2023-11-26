@@ -80,8 +80,4 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
         return false
     }
 
-//    override fun onProviderRemoved(smartspacerId: String) {
-//        //Handle removal of the Target (optional)
-//    }
-
 }
