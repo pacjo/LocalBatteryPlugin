@@ -1,6 +1,7 @@
 package nodomain.pacjo.smartspacer.localbattery.targets
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.graphics.drawable.Icon
 import android.os.BatteryManager

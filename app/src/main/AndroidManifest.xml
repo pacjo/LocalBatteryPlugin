@@ -21,6 +21,11 @@
                 <action android:name="com.kieronquinn.app.smartspacer.TARGET" />
             </intent-filter>
         </provider>
+        <provider
+            android:name=".providers.BatteryBroadcastProvider"
+            android:authorities="${applicationId}.broadcast.example"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_BROADCASTS"
+            android:exported="true"/>
     </application>
 
 </manifest>
