@@ -61,7 +61,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                 icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(
                     Icon.createWithResource(
                         provideContext(),
-                        R.drawable.baseline_bolt_24
+                        R.drawable.baseline_bolt
                     )
                 )
             ).create().apply {
