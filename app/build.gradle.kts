@@ -9,9 +9,9 @@ android {
 
     defaultConfig {
         applicationId = "nodomain.pacjo.smartspacer.localbattery"
-        minSdk = 29
+        minSdk = 30
         targetSdk = 34
-        versionCode = 1
+        versionCode = 1000
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
