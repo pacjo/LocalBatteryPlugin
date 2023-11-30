@@ -72,9 +72,7 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
             label = "Local Battery",
             description = "Shows charging information",
             icon = Icon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),    //TODO: change
-            // TODO: refreshPeriodMinutes = // Optional: How often the refresh broadcast for this Target should be called, in minutes (defaults to 0, never)
-            // TODO: compatibilityState = // Optional: A CompatibilityState object representing whether this Target is compatible with the device or not (defaults to always compatible)
-            // TODO: broadcastProvider = // Optional: The authority of a Broadcast Provider attached to this Target (see Broadcast Providers page)
+            broadcastProvider = "nodomain.pacjo.smartspacer.localbattery.broadcast.example"
         )
     }
 
