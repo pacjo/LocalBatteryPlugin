@@ -1,11 +1,11 @@
 package nodomain.pacjo.smartspacer.localbattery.targets
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Context.BATTERY_SERVICE
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.Icon
 import android.os.BatteryManager
-import android.util.Log
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
@@ -29,25 +29,32 @@ fun convertTime(timeInMilliseconds: Long): String {
 class LocalBatteryTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-
         val batteryManager = context?.getSystemService(BATTERY_SERVICE) as BatteryManager
-        val isCharging: Boolean = batteryManager.isCharging
-        val timeToCharge: Long = batteryManager.computeChargeTimeRemaining()
-        val batteryCurrent: Int = BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE
-        // TODO: val batteryVoltage: Int = BatteryManager.????
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+            context!!.registerReceiver(null, ifilter)
+        }
 
-        var title = "Charging"
-        var subtitle = "Full in ${convertTime(timeToCharge)}"
-//        if (timeToCharge.toInt() == -1) {
-//            Log.i("MainActivity", "Can't get remaining time, skipping (${timeToCharge})")
-//            title = "$batteryCurrent mA"
-//            subtitle = ""
-//        }
+        val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+        val charging = status == BatteryManager.BATTERY_STATUS_CHARGING
+        val chargingTimeRemaining = batteryManager.computeChargeTimeRemaining()
+        val level = (
+                (
+                        (100f *
+                                batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, 0)!!) /
+                                batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
+                        )
+                ).toInt()
 
-        if (timeToCharge.toInt() > -1) {
-            Log.i("MainActivity", "Got remaining charge time: ${convertTime(timeToCharge)}")
+        val title = "Charging"
+        val subtitle = if (charging && chargingTimeRemaining > -1) {
+            "${level}% — full in ${convertTime(chargingTimeRemaining)}"
+        } else {
+           "${level}%"
+        }
+
+        if (charging) {
             return listOf(TargetTemplate.Basic(
-                id ="example_$smartspacerId",
+                id = "example_$smartspacerId",
                 componentName = ComponentName(provideContext(), LocalBatteryTarget::class.java),
                 title = Text(title),
                 subtitle = Text(subtitle),
@@ -61,10 +68,8 @@ class LocalBatteryTarget: SmartspacerTargetProvider() {
                 canBeDismissed = false
             })
         } else {
-            Log.i("MainActivity", "Can't get remaining charge time, returning empty target")
             return emptyList()
         }
-
     }
 
     override fun getConfig(smartspacerId: String?): Config {
