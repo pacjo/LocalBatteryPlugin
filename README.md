@@ -1,4 +1,5 @@
-TODO:
-- [ ] app icon too small in smartspacer (also wrong color in edit target menu)
-- [ ] no metadata in plugins section
-- [ ] no monochrome icon visible e.g. in android settings
+# THIS REPOSITORY HAS MIGRATED TO: [SmartspacerPlugins](https://github.com/pacjo/SmartspacerPlugins)
+
+Now I'm maintaining all my smartspacer plugins in one repository. This is repo is here temporarly and will be deleted in the future.
+
+ZIP file with this code is available in the first release in the new repo.
